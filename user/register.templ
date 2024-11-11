@@ -1,0 +1,16 @@
+package user
+
+import(
+  "shoppinglist/layout"
+)
+
+templ RegisterTempl() {
+  @layout.BaseLayoutTempl(RegisterPageLayoutTempl(), "anmelden", "Anmelden") 
+}
+
+templ RegisterPageLayoutTempl() {
+  <form hx-put="anmelden">
+    <input type="mail" name="mail" placeholder="E-Mail Adresse" />
+    <button class={"block", layout.ButtonClasses}>Registrieren</button>
+  </form>
+}

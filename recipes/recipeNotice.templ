@@ -1,0 +1,13 @@
+package recipes
+
+import (
+  "fmt"
+
+  "shoppinglist/layout"
+)
+
+templ recipeNoticeTempl(id int, text string) {
+  <textarea rows="4" cols="40" placeholder="Notiz hinzufügen..." name="notiz"
+    class={"mt-6", layout.TextInputClasses}
+    hx-trigger="change throttle:500ms" hx-target="this" hx-put={fmt.Sprintf("/rezept/%d/notiz", id)}>{text}</textarea>
+}

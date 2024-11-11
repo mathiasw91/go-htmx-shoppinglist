@@ -1,0 +1,38 @@
+package shoppinglist
+
+import "fmt"
+import "shoppinglist/layout"
+
+templ shoppinglistAddRecipeFragmentTempl() {
+  <dialog id="recipeAmountDialog" class="p-4 rounded">
+    <form hx-put="/addRecipe" hx-target="#pageContent"
+      class="grid grid-rows-[auto_200px_auto_auto]">
+      <input type="search" name="name" class={layout.TextInputClasses} placeholder="Rezeptname eingeben"
+        hx-post="/addRecipe/search" hx-target="#recipeResults"
+        hx-trigger="input changed delay:500ms, search" hx-indicator="#recipeSearchIndicator"
+        autofocus/>
+      <div id="recipeResults"></div>
+      <div class="my-6">
+        <label>
+          Wie oft hinzufügen?
+          <select name="anzahl">
+            for index := range 5 {
+              <option>{fmt.Sprintf("%d", index + 1)}</option>
+            }
+          </select>
+        </label>
+        <input type="hidden" name="rezeptId"/>
+      </div>
+      <div>
+        <button class={layout.ButtonClasses} type="button" onclick="closeDialog()" formmethod="dialog">Abbrechen</button>
+        <button id="confirmBtn" class={layout.ButtonClasses} value="default">Hinzufügen</button>
+      </div>
+    </form>
+  </dialog>
+  <script>
+    document.getElementById("recipeAmountDialog").showModal();
+    function closeDialog() {
+      document.getElementById("recipeAmountDialog").close();
+    }
+  </script>
+}

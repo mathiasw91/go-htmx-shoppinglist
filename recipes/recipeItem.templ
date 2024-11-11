@@ -1,0 +1,7 @@
+package recipes
+
+import "fmt"
+
+templ recipeItemTempl(id int, text string) {
+  <div hx-trigger="click" hx-target="this" hx-swap="outerHTML" hx-get={fmt.Sprintf("/rezept/eintragEditieren/fragment/%d", id)}>{text}</div>
+}

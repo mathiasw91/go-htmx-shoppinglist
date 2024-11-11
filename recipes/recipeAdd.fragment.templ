@@ -1,0 +1,12 @@
+package recipes
+
+import "fmt"
+import "shoppinglist/layout"
+
+templ recipeAddFragmentTempl(id int) {
+  <form hx-put={fmt.Sprintf("/rezept/hinzufuegen/%d", id)} hx-target="#pageContent" hx-swap="outerHTML" class="flex flex-col">
+    <input name="name" type="text" class={"my-4", layout.TextInputClasses} autofocus placeholder="Name" />
+    <input name="amount" type="number" class={"my-4", layout.TextInputClasses} value="1" placeholder="Anzahl"/>
+    <button class={layout.ButtonClasses}>Abschicken</button>
+  </form>
+}

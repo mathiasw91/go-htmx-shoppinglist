@@ -1,0 +1,42 @@
+package shoppinglist
+
+
+import(
+  "shoppinglist/layout"
+)
+
+templ shoppinglistTempl(list Shoppinglist) {
+  @layout.BaseLayoutTempl( pageLayoutTempl(list), "einkaufsliste", "Einkaufsliste")
+}
+
+templ pageLayoutTempl(list Shoppinglist) {
+  <div id="pageContent" class="min-h-full h-full grid grid-rows-[1fr_auto]">
+    <div class="overflow-y-auto">
+      for _, item := range list {
+        @shoppinglistItemTempl(item.id, item.text, item.checked)
+      }
+      if len(list) == 0 {
+        Keine Einträge vorhanden
+      }
+    </div>
+    <div class="grid grid-cols-2 gap-4 mt-4">
+      <button class={"block", layout.ButtonClasses}
+        hx-get="/addItem/fragment" hx-target="closest div" hx-swap="outerHTML">
+        Eintrag hinzufügen
+      </button>
+      <button class={"block", layout.ButtonClasses}
+        hx-get="/delete/checked" hx-target="#pageContent" hx-swap="outerHTML">
+        Abgehake löschen
+      </button>
+      <button class={"block", layout.ButtonClasses}
+        hx-get="/addRecipe/fragment" hx-target="#pageContent" hx-swap="beforeend">
+        Rezept hinzufügen
+      </button>
+      <button class={"block", layout.ButtonClasses}
+        hx-get="/delete/all" hx-target="#pageContent" hx-swap="outerHTML">
+        Alle löschen
+      </button>
+    </div>
+  </div>
+}
+

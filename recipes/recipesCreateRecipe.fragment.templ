@@ -1,0 +1,10 @@
+package recipes
+
+import "shoppinglist/layout"
+
+templ recipesCreateFragmentTempl() {
+  <form hx-put="/rezepte/anlegen" hx-target="#pageContent" hx-swap="outerHTML" class="flex flex-col">
+    <input name="name" type="text" class={"my-4", layout.TextInputClasses} autofocus />
+    <button class={layout.ButtonClasses}>Abschicken</button>
+  </form>
+}

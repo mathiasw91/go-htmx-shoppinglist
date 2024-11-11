@@ -1,0 +1,19 @@
+package recipes
+
+import "fmt"
+import "shoppinglist/layout"
+
+templ recipePersonsTempl(id int, persons int) {
+  <div>
+    <label>Personen pro Rezept
+      <select name="persons" class={layout.TextInputClasses}
+        hx-trigger="change" hx-target="closest div" hx-put={fmt.Sprintf("/rezept/%d/personen", id)}>
+        for i := 1; i < 11; i ++ {
+          <option if i == persons {
+            selected
+          }>{fmt.Sprintf("%d", i)}</option>
+        }
+      </select>
+    </label> 
+  </div>
+}

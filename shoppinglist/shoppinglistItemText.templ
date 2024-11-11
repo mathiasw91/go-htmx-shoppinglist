@@ -1,0 +1,9 @@
+package shoppinglist
+
+import(
+  "fmt"
+)
+
+templ shoppinglistItemTextTempl(index int, text string) {
+  <span hx-get={fmt.Sprintf("/renameItem/fragment/%d", index)} hx-trigger="click" hx-target="this">{text}</span>
+}

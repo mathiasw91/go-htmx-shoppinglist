@@ -1,0 +1,142 @@
+package layout
+
+templ BaseLayoutTempl(content templ.Component, NavActive string, title string) {
+  <!doctype html>
+  <html class="h-full bg-gray-100">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script src="/assets/js/htmx.min.js"></script>
+    </head>
+    <body class="h-full page-loading" hx-indicator="#loading-bar">
+      <style>
+          #loading-bar .particle{
+              opacity: 0;
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 6px;
+              background: linear-gradient(90deg, transparent,
+                  #ffffff, transparent,
+                  #ffffff, transparent
+              );
+          }
+          .htmx-request#loading-bar,
+          .page-loading#loading-bar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+          }
+          .htmx-request#loading-bar .particle,
+          .page-loading#loading-bar .particle {
+              opacity: 1;
+              animation: fadeIn 2s linear infinite, slide 0.8s ease-in-out infinite;
+          }
+          @keyframes slide {
+              0%   { transform: translateX(-100%); }
+              100% { transform: translateX( 100%); }
+          }
+          @keyframes fadeIn {
+              0%   { opacity: 0; }
+              100% { opacity: 1; }
+          }
+      </style>
+      <div id="loading-bar"><div class="particle"></div></div>
+      <div id="errors"></div>
+
+      <div class="min-h-full h-full grid grid-rows-[auto_1fr]">
+        <nav class="bg-black">
+          <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+              <div class="flex items-center">
+                <div class="md:hidden text-white font-bold text-xl">{title}</div>
+                <div class="hidden md:block">
+                  <div class="ml-10 flex items-baseline space-x-4">
+                    <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                    if NavActive == "einkaufsliste" {
+                      <a href="/" class="rounded-md px-3 py-2 text-sm font-medium bg-gray-900 text-white"  aria-current="page">Einkaufsliste</a>
+                    } else {
+                      <a href="/" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Einkaufsliste</a>
+                    }
+                    if NavActive == "rezepte" {
+                      <a href="/rezepte" class="rounded-md px-3 py-2 text-sm font-medium bg-gray-900 text-white"  aria-current="page">Rezepte</a>
+                    } else {
+                      <a href="/rezepte" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Rezepte</a>
+                    }
+                  </div>
+                </div>
+              </div>
+              
+              <div class="-mr-2 flex md:hidden">
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-toggle" type="button" class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" aria-controls="mobile-menu" aria-expanded="false">
+                  <span class="absolute -inset-0.5"></span>
+                  <span class="sr-only">Open main menu</span>
+                  <!-- Menu open: "hidden", Menu closed: "block" -->
+                  <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                  </svg>
+                  <!-- Menu open: "block", Menu closed: "hidden" -->
+                  <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile menu, show/hide based on menu state. -->
+          <div class="hidden" id="mobile-menu">
+            <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+              
+              if NavActive == "einkaufsliste" {
+                <a href="/" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Einkaufsliste</a>
+              } else {
+                <a href="/" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Einkaufsliste</a>
+              }
+              if NavActive == "rezepte" {
+                <a href="/rezepte" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Rezepte</a>
+              } else {
+                <a href="/rezepte" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Rezepte</a>
+              }
+
+            </div>
+          </div>
+        </nav>
+
+        <main class="min-h-full w-full mx-auto px-4 py-2 sm:px-6 lg:px-8">
+          @content
+        </main>
+      </div>
+
+    <script>
+      function setupErrorhandling() {
+          htmx.on('htmx:responseError', function(event) {
+            //TODO: transition in and out
+            const span = document.createElement("span");
+            span.innerText = event.detail.xhr.response;
+            span.classList = "fixed top-0 left-0 right-0 bg-red-500 text-white p-4 z-20";
+            document.getElementById("errors").append(span);
+            setTimeout(() => {
+              document.getElementById("errors").removeChild(span);
+            }, 5000);
+          });
+      }
+      window.onbeforeunload = () => {
+        document.getElementById("loading-bar").classList.add("page-loading")
+      };
+      document.addEventListener("DOMContentLoaded", ()=> {
+        document.getElementById("loading-bar").classList.remove("page-loading")
+        setupErrorhandling();
+      });
+      document.getElementById("mobile-menu-toggle").onclick = function() {
+        document.getElementById("mobile-menu").classList.toggle("hidden");
+      };
+    </script>
+    </body>
+  </html>
+}

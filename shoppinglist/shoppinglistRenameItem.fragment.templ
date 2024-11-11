@@ -1,0 +1,10 @@
+package shoppinglist
+
+import "fmt"
+import "shoppinglist/layout"
+
+templ shoppinglistRenameItemFragmentTempl(id int, text string) {
+  <form hx-put={fmt.Sprintf("/renameItem/%d", id)} hx-target="this">
+    <input type="text" class={layout.TextInputClasses} name="text" value={text} autofocus />
+  </form>
+}

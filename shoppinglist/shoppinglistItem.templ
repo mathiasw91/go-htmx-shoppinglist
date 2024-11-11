@@ -1,0 +1,16 @@
+package shoppinglist
+
+import "fmt"
+
+templ shoppinglistItemTempl(id int, text string, checked bool) {
+    <div class={"grid grid-cols-[50px_auto] items-center px-2 py-4 border-b-2 border-gray-200 transition-colors",
+      templ.KV(" bg-green-200", checked), templ.KV(" bg-transparent", !checked)}>
+      <input type="checkbox" class="w-6 h-6" hx-post={fmt.Sprintf("/toggleItem/%d", id)} 
+        hx-swap="outerHTML" hx-target="closest div"
+        if checked {
+          checked="checked"
+        }
+        />
+      @shoppinglistItemTextTempl(id, text)
+    </div>
+}

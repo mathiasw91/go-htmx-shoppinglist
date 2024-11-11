@@ -1,0 +1,10 @@
+package shoppinglist
+
+import "shoppinglist/layout"
+
+templ shoppinglistAddItemFragmentTempl() {
+  <form hx-put="/addItem" hx-target="#pageContent" hx-swap="outerHTML" class="flex flex-col">
+    <input name="text" type="text" class={"my-4", layout.TextInputClasses} autofocus />
+    <button class={layout.ButtonClasses}>Abschicken</button>
+  </form>
+}

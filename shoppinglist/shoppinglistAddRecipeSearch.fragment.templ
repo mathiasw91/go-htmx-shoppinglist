@@ -1,0 +1,24 @@
+package shoppinglist
+
+import "fmt"
+import "shoppinglist/recipes"
+
+templ shoppinglistAddRecipeSearchFragmentTempl(recipes []recipes.Recipe) {
+  if len(recipes) == 0 {
+    <span>Kein Rezept gefunden</span>
+  }
+  for index, recipe := range recipes {
+    <div class="addRecipeSelectItem py-2 border-b-2 border-gray-200" id={fmt.Sprintf("listbox-option-%d", index)}
+      role="option" tabindex={fmt.Sprintf("%d", index)} onclick="setSelectedRecipe(event)">
+        <span class="ml-3 block truncate font-normal" data-recipeid={fmt.Sprintf("%d", recipe.Id)}
+          data-persons={fmt.Sprintf("%d", recipe.Persons)}>{recipe.Name}</span>
+    </div>
+  }
+  <script>
+    function setSelectedRecipe({ currentTarget }){
+      document.querySelector('#recipeAmountDialog input[name="rezeptId"]').value = currentTarget.querySelector("span").dataset.recipeid;
+      document.querySelector('#recipeAmountDialog input[name="name"]').value = currentTarget.querySelector("span").innerHTML;
+      document.querySelector('#recipeResults').innerHTML = '<span class="text-sm pl-2">für '+currentTarget.querySelector("span").dataset.persons+" Personen</span>";
+    };
+  </script>
+}

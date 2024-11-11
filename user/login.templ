@@ -1,0 +1,16 @@
+package user
+
+import(
+  "shoppinglist/layout"
+)
+
+templ LoginTempl() {
+  @layout.BaseLayoutTempl(LoginPageLayoutTempl(), "anmelden", "Anmelden") 
+}
+
+templ LoginPageLayoutTempl() {
+  <form id="login-form" hx-post="/anmelden">
+    <input type="mail" class={"w-full", "my-4", layout.TextInputClasses} name="mail" />
+    <button class={"w-full", "block", layout.ButtonClasses}>Anmelden</button>
+  </form>
+}
